@@ -1,5 +1,8 @@
-﻿define e = Character("Eileen")
+﻿# characters
+define character.h = Character("Hapil")
+define character.aL = Character("Ashenleaf")
 
+# variable
 default startBattleState = True
 
 # init input
@@ -34,14 +37,37 @@ init python:
 # start of game
 label start:
 
+    camera:
+        perspective True
+
+    show bg test:
+        pos (235, 118) zpos 18.0 matrixtransform ScaleMatrix(1.36, 1.36, 1.0)*OffsetMatrix(0.0, 0.0, 0.0)*RotateMatrix(0.0, 0.0, 0.0)*OffsetMatrix(0.0, 0.0, 0.0)*OffsetMatrix(0.0, 0.0, 0.0) 
+    
     $ attention_ennemy = 100
     $ attention_player = 100
     $ max_attention = 100
 
-    scene bg room
+    show hapil default:
+        pos (0.22, 180) matrixtransform ScaleMatrix(1.3, 1.3, 1.0)*OffsetMatrix(0.0, 0.0, 0.0)*RotateMatrix(0.0, 0.0, 0.0)*OffsetMatrix(0.0, 0.0, 0.0)*OffsetMatrix(0.0, 0.0, 0.0) 
+
+    h "Hello !"
+
+    show ashenleaf default:
+        pos (0.58, 117) matrixtransform ScaleMatrix(1.3, 1.3, 1.0)*OffsetMatrix(0.0, 0.0, 0.0)*RotateMatrix(0.0, 0.0, 0.0)*OffsetMatrix(0.0, 0.0, 0.0)*OffsetMatrix(0.0, 0.0, 0.0) 
+
+    aL "Hello mate"
+
     jump battlePrototype
     return
 
+
+
+# all labels about camera
+label attack:
+    camera:
+        ease 0.5 matrixtransform ScaleMatrix(1.0, 1.0, 1.0)*OffsetMatrix(-333.0, 288.0, 612.0)*RotateMatrix(0.0, 0.0, -4.0)*OffsetMatrix(0.0, 0.0, 0.0)*OffsetMatrix(0.0, 0.0, 0.0) 
+        easeout 5.0 matrixtransform ScaleMatrix(1.0, 1.0, 1.0)*OffsetMatrix(0.0, 0.0, 0.0)*RotateMatrix(0.0, 0.0, 0.0)*OffsetMatrix(0.0, 0.0, 0.0)*OffsetMatrix(0.0, 0.0, 0.0) 
+    return
 
 
 screen attentionBars:
@@ -63,11 +89,12 @@ screen attentionBars:
 menu battlePrototype:
     "Start battle":
         show screen attentionBars
-        call screen battle
+        call screen battleMenu
+        
 
 
 # main battle screen
-screen battle:
+screen battleMenu:
 
     $ startBattleState = True
     
@@ -82,7 +109,7 @@ screen battle:
             ypadding 20
             xalign 0.1
             yalign 0.5
-            textbutton "attack" action [Hide("battle"), Show("attack")]
+            textbutton "attack" action [Hide("battleMenu"), Show("attack")]
 
         # defend button
         frame:
@@ -120,18 +147,6 @@ init python in variables:
     def getText():
         #print("bonjour je suis appelé une fois : " + globals()['textNotes'])
         return globals()['textNotes']
-
-
-
-init python in attention:
-
-    def updateEnnemyLife(damage):
-        global attention_ennemy
-        attention_ennemy -= damage
-
-    def getEnnemyLife():
-        global attention_ennemy 
-        return attention_ennemy
 
 
 
@@ -195,7 +210,6 @@ screen attack:
             startBattleState = False
         if sequFunc.checkSequences(inputList):
             globals()['attention_ennemy'] -= 20
-            print("truc")
         #else:
             #print("state of list : ")
             #printList(inputList)
@@ -270,7 +284,7 @@ screen attack:
             ypadding 20
             xalign 0.5
             yalign 0.5
-            textbutton "Return" action [Hide("attack"), Show("battle")]
+            textbutton "Return" action [Hide("attack"), Show("battleMenu")]
 
     if sequFunc.checkSequences(inputList):
         frame:
@@ -279,7 +293,7 @@ screen attack:
             xalign 0.5
             yalign 0.5
             text "Good Sequence !"
-        timer 1.0 action [Hide("attack"), Show("battle")]
+        timer 1.0 action [Hide("attack"), Show("battleMenu")]
 
     if len(inputList) > 5:
         $ inputList = []
