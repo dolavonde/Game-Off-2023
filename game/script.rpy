@@ -1,6 +1,18 @@
 ﻿# characters
-define character.h = Character("Hapil")
-define character.aL = Character("Ashenleaf")
+define character.y = Character("Me")
+define y.playerType = 0
+define y.playerName = "" 
+
+# i define it but really not sure if we are going to use it
+define n = Character("Narrator")
+define o = Character("Organizer")
+define g = Character("Guardian")
+define e = Character("Elder")
+
+define a = Character("Ashenleaf")
+define p = Character("Pumpell plum")
+define h = Character("Hapil")
+define l = Character("Lowtront glow")
 
 # variable
 default startBattleState = True
@@ -37,29 +49,203 @@ init python:
 # start of game
 label start:
 
-    camera:
-        perspective True
-
-    show bg test:
-        pos (235, 118) zpos 18.0 matrixtransform ScaleMatrix(1.36, 1.36, 1.0)*OffsetMatrix(0.0, 0.0, 0.0)*RotateMatrix(0.0, 0.0, 0.0)*OffsetMatrix(0.0, 0.0, 0.0)*OffsetMatrix(0.0, 0.0, 0.0) 
-    
     $ attention_ennemy = 100
     $ attention_player = 100
     $ max_attention = 100
+    $ playerName = ""
 
-    show hapil default:
-        pos (0.22, 180) matrixtransform ScaleMatrix(1.3, 1.3, 1.0)*OffsetMatrix(0.0, 0.0, 0.0)*RotateMatrix(0.0, 0.0, 0.0)*OffsetMatrix(0.0, 0.0, 0.0)*OffsetMatrix(0.0, 0.0, 0.0) 
+    # type depend on which leafling we are :
+    # type = 0 => Ashenleaf
+    # type = 1 => PumpellPlum
+    # type = 2 => Hapil
+    # type = 3 => LowtrontGlow
+    $ playerType = 0
 
-    h "Hello !"
-
-    show ashenleaf default:
-        pos (0.58, 117) matrixtransform ScaleMatrix(1.3, 1.3, 1.0)*OffsetMatrix(0.0, 0.0, 0.0)*RotateMatrix(0.0, 0.0, 0.0)*OffsetMatrix(0.0, 0.0, 0.0)*OffsetMatrix(0.0, 0.0, 0.0) 
-
-    aL "Hello mate"
-
-    jump battlePrototype
+    jump intro
+    #jump battlePrototype
     return
 
+
+
+# ----------------------
+# Introduction
+# ----------------------
+label intro:
+    scene black
+    
+    o "Hmm..."
+    o "This won't do"
+
+    # fade image that represents the organizer sitting at the desk
+
+    o "This time next spring the arch will still not have bloomed..."
+    o "And Guardian will have to move on. \n\nI have to do something !"
+
+    # fade image that represents the organizer writing at desk
+    o "And I'm writing to the sweet villagers of the Hapil, we'd love to invite your fun ways..."
+    o "A first of hopefully many events !"
+    o "If you can spare one... or two of the Ashenleaf, we can find a way to show their unique skills"
+    o "It's about time we get to celebrate some Ashenleaf Voices."
+    o "The songs of Pumpell Plums always have a place in our hearts, as they've been the ones to start our tradition."
+    o "We hope to hear voices here !"
+    o "I can still remember the first time I heard the voice from those on the path of the Lowtront Glow..."
+    o "When I was a child the first song I heard haunted me for years... in a good way ! Come by !"
+
+    # maybe fade agin on the organizer sitting at the desk
+    o "Now then, I just need to get these letters out once-"
+    o "Oh ! It's already this late ! \n\nI must hurry !"
+
+    jump sc1_1
+
+
+
+# ----------------------
+# Scene 1
+# ----------------------
+
+# act 1
+label sc1_1:
+    # fade to the the mc receiving the letter
+    # maybe need some more informations on this ?
+    # I add the character saying something like "Oh" to make the scene last
+    y "Oh..."
+    jump sc1_2_1
+
+# act 2.1
+label sc1_2_1:
+    # need some more information on how we introduce the characters, the ceremony, and the story
+
+    # fade to the day of the opening ceremony, leaflings surround the archway
+    "?" "Oh ! Excuse me !"
+    call screen characterSelection
+
+# images related to the button, it's ugly for the moment, we need to take time to make correct buttons
+# also I do this to resize the image, thoses weird numbers is just the width and height of each image times 0.8
+image ashenleafButtonIdle = im.Scale("ashenleaf default.png", 343.2, 778.4)
+image PumpellPlumButtonIdle = im.Scale("PumpellPlum default.png", 375.2, 698.4)
+image hapilButtonIdle = im.Scale("hapil default.png", 348, 752)
+image lowtrontGlowButtonIdle = im.Scale("LowtrontGlow default.png", 267.2, 734.4)
+
+# character Selection screen
+screen characterSelection:
+    hbox:
+        xalign 0.5
+        yalign 0.5
+        spacing 40
+
+        # ashenleaf button
+        frame:
+            xpadding 30
+            ypadding 30
+            xalign 0.5
+            yalign 0.5
+            imagebutton idle "ashenleafButtonIdle" action [SetVariable("y.playerType", 0), Jump("nameAshenleafChoices")]
+
+        # pumpell plum
+        frame:
+            xpadding 30
+            ypadding 30
+            xalign 0.5
+            yalign 0.5
+            imagebutton idle "PumpellPlumButtonIdle" action [SetVariable("y.playerType", 1), Jump("namePumpellPlumChoices")]
+
+        # hapil
+        frame:
+            xpadding 30
+            ypadding 30
+            xalign 0.5
+            yalign 0.5
+            imagebutton idle "hapilButtonIdle" action [SetVariable("y.playerType", 2), Jump("nameHapilChoices")]
+
+        # lowtront glow
+        frame:
+            xpadding 30
+            ypadding 30
+            xalign 0.5
+            yalign 0.5
+            imagebutton idle "lowtrontGlowButtonIdle" action [SetVariable("y.playerType", 3), Jump("nameLowtrontGlowChoices")]
+
+# choices for name
+# for ashenleaf
+menu nameAshenleafChoices:
+    "What's your name ?"
+
+    "Sahen":
+        $ y.playerName = "Sahen"
+        jump sc1_2_2
+    "Aheleh":
+        $ y.playerName = "Aheleh"
+        jump sc1_2_2
+    "Enel Ehales":
+        $ y.playerName = "Enel"
+        jump sc1_2_2
+# for Pumpell Plum
+menu namePumpellPlumChoices:
+    "What's your name ?"
+
+    "Melulu":
+        $ y.playerName = "Melulu"
+        jump sc1_2_2
+    "Ume":
+        $ y.playerName = "Ume"
+        jump sc1_2_2
+    "Lemu":
+        $ y.playerName = "Lemu"
+        jump sc1_2_2
+# for Hapil
+menu nameHapilChoices:
+    "What's your name ?"
+
+    "Pilla":
+        $ y.playerName = "Pilla"
+        jump sc1_2_2
+    "Hali":
+        $ y.playerName = "Hali"
+        jump sc1_2_2
+    "Ala":
+        $ y.playerName = "Ala"
+        jump sc1_2_2
+# for Lowtront Glow
+menu nameLowtrontGlowChoices:
+    "What's your name ?"
+
+    "Itlin":
+        $ y.playerName = "Itlin"
+        jump sc1_2_2
+    "Otorn":
+        $ y.playerName = "Otorn"
+        jump sc1_2_2
+    "Wotto":
+        $ y.playerName = "Wotto"
+        jump sc1_2_2
+
+
+label sc1_2_2:
+
+    # I don't know how to do the transition but it's okay
+    y "Hello ? My name is [y.playerName] !"
+
+    # I thought it would be fun to make the character react weird if you choose enel ehales
+    if y.playerName == "Enel Ehales":
+        "?" "It will be just [y.playerName]..."
+    else:
+        "?" "Hello [y.playerName] ! I'm ?, it's great to meet you !"
+
+    # I read the script it's hard to understand who is this person, what does he want us 
+    # or even what are all of the dialogues that appears on the script...
+
+
+
+# ----------------------
+# Scene 2
+# ----------------------
+
+
+
+
+# ----------------------
+# All related to the battles
+# ----------------------
 
 
 # all labels about camera
