@@ -53,6 +53,8 @@ label start:
     $ attention_player = 100
     $ max_attention = 100
     $ playerName = ""
+    $ urTurn = false
+    $ begin = true
 
     # type depend on which leafling we are :
     # type = 0 => Ashenleaf
@@ -242,11 +244,75 @@ label sc1_2_2:
 
 
 
+# ----------------------
+# Scene 3
+# 
+# New day, and this is where we are going to do the tutorial with the first trainer
+# ----------------------
+
+
+
+# ----------------------
+# Scene 4
+#
+# 
+# ----------------------
+
+
+
 
 # ----------------------
 # All related to the battles
 # ----------------------
+label battles_hub:
 
+    # here we choose randomly whose turn gonna be
+    # actually, I will do one chance out of three, so the player will have more chance to begin, it will be more fun
+    # 0 = ennemy turn
+    # 1 and 2 = our turn
+    $ d3 = renpy.random.randint(0, 2)
+
+    if begin == true :
+
+        # screen that show the attention bars on right and left
+        show screen attentionBars
+        
+        if d2 == 0:
+            $ urTurn = false
+            $ begin = false
+        else
+            $ urTurn = true
+            $ begin = false
+
+    if urTurn == true:
+        # all related to our turn !
+        call screen battleMenu
+    else: 
+        # all related to the opponent turn !
+
+        if attention_player <= 66:
+            
+            if d3 == 0:
+
+            elif d3 == 1:
+
+            elif d3 == 2:
+
+        elif 33 <= attention_player < 66:
+
+            if d3 == 0:
+
+            elif d3 == 1:
+
+            elif d3 == 2:
+
+        elif attention_player < 33:  
+
+            if d3 == 0:
+
+            elif d3 == 1:
+
+            elif d3 == 2:
 
 # all labels about camera
 label attack:
