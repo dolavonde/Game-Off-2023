@@ -1,7 +1,7 @@
 ﻿# characters
 define character.y = Character("Me")
 define y.playerType = 0
-define y.playerName = "" 
+define y.playerName = ""
 
 # i define it but really not sure if we are going to use it
 define n = Character("Narrator")
@@ -13,6 +13,12 @@ define a = Character("Ashenleaf")
 define p = Character("Pumpell plum")
 define h = Character("Hapil")
 define l = Character("Lowtront glow")
+
+define character.t1 = Character("Trainer 1")
+define ht = Character("Hapil Trainer")
+define pt = Character("Pumpell Plum Trainer")
+
+default preferences.text_cps = 30
 
 # variable
 default startBattleState = True
@@ -53,8 +59,11 @@ label start:
     $ attention_player = 100
     $ max_attention = 100
     $ playerName = ""
-    $ urTurn = false
-    $ begin = true
+    $ urTurn = False
+    $ begin = True
+
+    # this variable is just so that the program know what battle we are in
+    $ battleState = 0
 
     # type depend on which leafling we are :
     # type = 0 => Ashenleaf
@@ -63,7 +72,7 @@ label start:
     # type = 3 => LowtrontGlow
     $ playerType = 0
 
-    jump intro
+    jump sc3_1
     #jump battlePrototype
     return
 
@@ -74,7 +83,8 @@ label start:
 # ----------------------
 label intro:
     scene black
-    
+    centered "Introduction..."
+
     o "Hmm..."
     o "This won't do"
 
@@ -167,6 +177,8 @@ screen characterSelection:
             yalign 0.5
             imagebutton idle "lowtrontGlowButtonIdle" action [SetVariable("y.playerType", 3), Jump("nameLowtrontGlowChoices")]
 
+# important to remove and replace !!!!!!!!!!!!
+
 # choices for name
 # for ashenleaf
 menu nameAshenleafChoices:
@@ -247,18 +259,144 @@ label sc1_2_2:
 # ----------------------
 # Scene 3
 # 
-# New day, and this is where we are going to do the tutorial with the first trainer
+# New day, and this is where we are going to do the tutorial with the first trainer, more of a tutorial than anything else
 # ----------------------
+label sc3_1:
+    scene black
+    centered "Day 1"
+
+    # will change just for debug purpose
+    t1 "Hey I will train you"
+    jump first_battle
+
+label first_battle:
+
+    $ battleState = 1
+    jump battles_hub
+
+label first_battle_Hub_Player:
+    $ urTurn = False
+    jump first_battle
+
+label firstBattleLose:
+    t1 "Maybe next time !!"
+    jump sc4_1
+
+label firstBattleWin:
+    t1 "Good job !!!"
+    jump sc4_1
 
 
 
 # ----------------------
 # Scene 4
 #
-# 
+# first real battle
 # ----------------------
+label sc4_1:
+    t1 "Oh I think the organizer is calling a meeting, let's see what does he want..."
+    # fade to the meeting room
+
+    o "So everyone, you will be paired with someone !"
+    scene black
+
+    # fade to hapil village
+
+    # ashenleaf and hapil
+    if y.playerType == 0 or y.playerType == 2: 
+        # we need to show both characters here I think
+
+        h "So we're partners, I guess !!"
+
+        # need information on his name + the daredevil thing
+        h "Good to meet you ! My name's ____ and I like something daredevil and bracelet-making and singing, and I'm super excited to join chorus"
+        a "Yeah, I heard-, wait, you like the daredevil thing ?!"
+
+        # still need some informations on how to setup
+        # I imagine that we skip the part where the ashenleaf is talking about, and we just show them vibing
+
+        a "But- OH wait right we have to go learn whatever song they want us to learn."
+        h "Okay ! Cool !"
+        a "If you ask me, it's stupid, not cool. They invited us, they should let us do our own thing !!"
+        a "But hey fine, whatever, we gotta do the doo-doo-doo song."
+        a "Aw but it's a lovely doo doo doo. C'mon !"
+        jump second_battle_trainer
+
+    # pumpell plum and lowtront glow
+    elif y.playerType == 1 or y.playerType == 3:
+
+        p "Come on now, we will be partners."
+        l "Oh, but I didn't... okay ?"
+
+        # still need the name
+        p "Your name ____, right ?"
+        l "Yes that's me."
+        p "Perfect. I've heard through the grapevine you have a beautiful voice, which is a blessing blessing for us traditional singers."
+        p "Once they hear us hitting the notes ever-so flawlessly, they'll be enraptured by our grace...!"
+        l "O-oh ! Um, thank you ! But, maybe we should... learn how to sing, first..."
+        p "Exactly"
+        jump second_battle_trainer
+
+# for this part I will need way more informations on how to setup it
+label second_battle_trainer:
+    # all related to the trainer battle
+    ht "Goooooooood morning everyone !!"
+
+label third_battle:
+    # all related to the first big battle
 
 
+label sc4_3_Win:
+    ht "Wonderful, wonderful job !!"
+
+    if y.playerType == 1 or y.playerType == 3:
+        h "Yyyes ! That was so fun !!"
+        # ?????? dont understand leafling stand in for cake
+        a "YEAH !! See, what'd I tell ya ! Piece of (leaflinf stand-in for cake ??)"
+        h "So, where to next ? Lead the way, partner."
+        a "To the (organizer) ! If we finished first, we can totally brag about it."
+        jump sc4_4
+    
+    if y.playerType == 0 or y.playerType == 2:
+        p "There ! Nothing less than perfection. Just like I knew it would be."
+
+        # lowtront blushing
+        l "Yeah... yeah."
+        p "Let's go then. Onto learning the next song !!"
+        jump sc4_4
+
+label sc4_3_Lose:
+    if y.playerType == 1 or y.playerType == 3:
+        h "Whoa ! Haha, that went well!"
+        a "Aaagh, no it didn't ! What did I tell you ? This whole thing is stupid"
+        h "Aw, I guess it didn't. Could we try again ?"
+        a "No way. Let's keep this one to ourselves."
+        jump sc4_4
+    
+    if y.playerType == 0 or y.playerType == 2:
+        p "Oh, dear. That needs some... work."
+        l "Mmm..."
+        jump sc4_4
+    
+label sc4_4: 
+
+    # we fade to the pumpell village, with the organizer that sends here
+
+    show black
+    centered "End day 1"
+    jump sc5_1
+
+
+
+# ----------------------
+# Scene 5
+# ----------------------
+label sc5_1: 
+
+    centered "Day 2"
+    
+    # fade to pumpell plum village
+    pt "You're late ! Come here, come here, stand in your spots. Quickly ! Thank you, dears."
 
 
 # ----------------------
@@ -268,51 +406,104 @@ label battles_hub:
 
     # here we choose randomly whose turn gonna be
     # actually, I will do one chance out of three, so the player will have more chance to begin, it will be more fun
-    # 0 = ennemy turn
-    # 1 and 2 = our turn
-    $ d3 = renpy.random.randint(0, 2)
+    # 1 = ennemy turn
+    # 3 and 2 = our turn
+    $ d3 = renpy.random.randint(1, 3)
 
-    if begin == true :
+    if battleState == 1:
 
-        # screen that show the attention bars on right and left
-        show screen attentionBars
-        
-        if d2 == 0:
-            $ urTurn = false
-            $ begin = false
-        else
-            $ urTurn = true
-            $ begin = false
+        if begin == True :
 
-    if urTurn == true:
+            # screen that show the attention bars on right and left
+            show screen attentionBars
+
+            if d3 == 1:
+                $ urTurn = False
+                $ begin = False
+            else:
+                $ urTurn = True
+                $ begin = False
+
         # all related to our turn !
-        call screen battleMenu
-    else: 
-        # all related to the opponent turn !
+        if urTurn == True:
+            centered "Our turn !"
 
-        if attention_player <= 66:
-            
-            if d3 == 0:
+            if attention_ennemy <= 0:
+                hide screen attentionBars
+                jump firstBattleWin
+            else:
+                call screen battleMenu
+        else: 
+            # all related to the opponent turn !
+            centered "Trainer turn !"
 
-            elif d3 == 1:
+            if attention_player >= 66:
 
-            elif d3 == 2:
+                if d3 == 1:
+                    t1 "Haha"
+                    $ attention_player -= 15
+                    $ urTurn = True
+                    jump battles_hub
 
-        elif 33 <= attention_player < 66:
+                elif d3 == 2:
+                    t1 "Try some new sequences like Q W E R"
+                    $ attention_player -= 23
+                    $ urTurn = True
+                    jump battles_hub
 
-            if d3 == 0:
+                elif d3 == 3:
+                    t1 "A little bit more !!"
+                    $ attention_player -= 15
+                    $ urTurn = True
+                    jump battles_hub
 
-            elif d3 == 1:
+            elif 33 <= attention_player < 66:
 
-            elif d3 == 2:
+                if d3 == 1:
+                    t1 "You're making some progress !!"
+                    $ attention_player -= 12
+                    $ urTurn = True
+                    jump battles_hub
 
-        elif attention_player < 33:  
+                elif d3 == 2:
+                    t1 "Continue like that !!"
+                    $ attention_player -= 23
+                    $ urTurn = True
+                    jump battles_hub
 
-            if d3 == 0:
+                elif d3 == 3:
+                    t1 "Try the sequence E W Q W E"
+                    $ attention_player -= 17
+                    $ urTurn = True
+                    jump battles_hub
 
-            elif d3 == 1:
+            elif 0 < attention_player < 33:
 
-            elif d3 == 2:
+                if d3 == 1:
+                    t1 "Almost there !!"
+                    $ attention_player -= 9
+                    $ urTurn = True
+                    jump battles_hub
+                
+                elif d3 == 2:
+                    t1 "In sync !"
+                    $ attention_player -= 14
+                    $ urTurn = True
+                    jump battles_hub
+                
+                elif d3 == 3:
+                    t1 "Try the sequence R Q Q R E E !"
+                    $ attention_player -= 16
+                    $ urTurn = True
+                    jump battles_hub
+
+            elif attention_player <= 0:
+                hide screen attentionBars
+                jump firstBattleLose
+
+label player_hub:
+    $ urTurn = False
+    jump battles_hub
 
 # all labels about camera
 label attack:
@@ -545,7 +736,7 @@ screen attack:
             xalign 0.5
             yalign 0.5
             text "Good Sequence !"
-        timer 1.0 action [Hide("attack"), Show("battleMenu")]
+        timer 1.0 action [Hide("attack"), Jump("player_hub")]
 
     if len(inputList) > 5:
         $ inputList = []
