@@ -1,24 +1,9 @@
-﻿# characters
-define character.y = Character("Me")
+﻿define character.y = Character("Me")
 define y.playerType = 0
 define y.playerName = ""
 
-# i define it but really not sure if we are going to use it
-define n = Character("Narrator")
-define o = Character("Organizer")
-define g = Character("Guardian")
-define e = Character("Elder")
-
-define a = Character("Ashenleaf")
-define p = Character("Pumpell plum")
-define h = Character("Hapil")
-define l = Character("Lowtront glow")
-
-define character.t1 = Character("Trainer 1")
-define ht = Character("Hapil Trainer")
-define pt = Character("Pumpell Plum Trainer")
-
 default preferences.text_cps = 30
+define gui.text_font = "fonts/Misty Style.ttf"
 
 # variable
 default startBattleState = True
@@ -27,6 +12,56 @@ default startBattleState = True
 # we will check if we just started the input
 init python:
     
+    def ashenleaf_bleep(event, **kwargs):
+        if event == "show":
+            d2 = renpy.random.randint(1,4)
+            if d2 == 1:
+                renpy.music.play("Dialogue/Ashenleaf 2/DolaVonde_dialogue_ASHENLEAF_2_DS-1.ogg", channel="sound", loop=True)
+            elif d2 == 2:
+                renpy.music.play("Dialogue/Ashenleaf 2/DolaVonde_dialogue_ASHENLEAF_2_DS-2.ogg", channel="sound", loop=True)
+            elif d2 == 3:
+                renpy.music.play("Dialogue/Ashenleaf 2/DolaVonde_dialogue_ASHENLEAF_2_DS-3.ogg", channel="sound", loop=True)
+            elif d2 == 4:
+                renpy.music.play("Dialogue/Ashenleaf 2/DolaVonde_dialogue_ASHENLEAF_2_DS-4.ogg", channel="sound", loop=True)
+        elif event == "slow_done" or event == "end":
+            renpy.music.stop(channel="sound" ,fadeout=0.15)
+    
+    def hapil_bleep(event, **kwargs):
+        if event == "show":
+            d2 = renpy.random.randint(1,3)
+            if d2 == 1:
+                renpy.music.play("Dialogue/Hapil/DolaVonde_dialogue_HAPIL DS-1.ogg", channel="sound", loop=True)
+            elif d2 == 2:
+                renpy.music.play("Dialogue/Hapil/DolaVonde_dialogue_HAPIL DS-2.ogg", channel="sound", loop=True)
+            elif d2 == 3:
+                renpy.music.play("Dialogue/Hapil/DolaVonde_dialogue_HAPIL DS-3.ogg", channel="sound", loop=True)
+        elif event == "slow_done" or event == "end":
+            renpy.music.stop(channel="sound" ,fadeout=0.15)
+
+    def pumpell_bleep(event, **kwargs):
+        if event == "show":
+            d2 = renpy.random.randint(1,3)
+            if d2 == 1:
+                renpy.music.play("Dialogue/Pumpell/DolaVonde_dialogue_PUMPELL-DS-1.ogg", channel="sound", loop=True)
+            elif d2 == 2:
+                renpy.music.play("Dialogue/Pumpell/DolaVonde_dialogue_PUMPELL-DS-2.ogg", channel="sound", loop=True)
+            elif d2 == 3:
+                renpy.music.play("Dialogue/Pumpell/DolaVonde_dialogue_PUMPELL-DS-3.ogg", channel="sound", loop=True)
+        elif event == "slow_done" or event == "end":
+            renpy.music.stop(channel="sound" ,fadeout=0.15)
+
+    def lowtront_bleep(event, **kwargs):
+        if event == "show":
+            d2 = renpy.random.randint(1,3)
+            if d2 == 1:
+                renpy.music.play("Dialogue/Lowtront/DolaVonde_dialogue_LOWTRONT DS-1.ogg", channel="sound", loop=True)
+            elif d2 == 2:
+                renpy.music.play("Dialogue/Lowtront/DolaVonde_dialogue_LOWTRONT DS-2.ogg", channel="sound", loop=True)
+            elif d2 == 3:
+                renpy.music.play("Dialogue/Lowtront/DolaVonde_dialogue_LOWTRONT DS-3.ogg", channel="sound", loop=True)
+        elif event == "slow_done" or event == "end":
+            renpy.music.stop(channel="sound" ,fadeout=0.15)
+
     # global variable where we store the inputText for the text in the attack/defend menu -> accessible everywhere as long as we do globals()['variable']
     globals()['textNotes'] = "Notes : "
 
@@ -50,6 +85,61 @@ init python:
             text += i + " "
         #print(text)
 
+# characters
+
+# i define it but really not sure if we are going to use it
+define o = Character("Organizer")
+define n = Character("Narrator")
+define g = Character("Guardian")
+define e = Character("Elder")
+
+define a = Character("Ashenleaf", callback=ashenleaf_bleep)
+define p = Character("Pumpell plum", callback=pumpell_bleep)
+define h = Character("Hapil", callback=hapil_bleep)
+define l = Character("Lowtront glow", callback=lowtront_bleep)
+
+define character.t1 = Character("Trainer 1")
+define ht = Character("Hapil Trainer")
+define pt = Character("Pumpell Plum Trainer")
+
+define l1 = Character("Rivil")
+define l2 = Character("Lerea")
+
+define la = Character("Laverie")
+
+
+# transform for the characters
+transform bouncein:
+        linear .2 alpha 0.6 xpos 600 ypos -800
+        linear .2 alpha 1   xpos 350 ypos -200
+        linear .2           xpos 0 ypos 100
+        linear .3           xpos 10 ypos 0
+
+transform breath:
+    linear 1 xpos 10 
+    linear 1 xpos 0   
+    repeat 
+
+transform breath2:
+    linear 1 ypos -10 
+    linear 1
+    linear 1 ypos 0   
+    repeat 
+
+transform shake:
+    linear .1 xpos 2 
+    linear .1 xpos 0 
+    linear .1 xpos 4 
+    linear .1 xpos 0   
+    repeat   
+
+transform shakemore:
+    linear .05 xpos -4 
+    linear .05 xpos 0   
+    linear .05 xpos 4
+    linear .05 xpos -4
+    #linear .1 xpos 6  
+    repeat  
 
 
 # start of game
@@ -72,7 +162,7 @@ label start:
     # type = 3 => LowtrontGlow
     $ playerType = 0
 
-    jump sc3_1
+    jump intro
     #jump battlePrototype
     return
 
@@ -91,17 +181,17 @@ label intro:
     # fade image that represents the organizer sitting at the desk
 
     o "This time next spring the arch will still not have bloomed..."
-    o "And Guardian will have to move on. \n\nI have to do something !"
+    o "And Guardian will have to move on. \n\nI have to do something!"
 
     # fade image that represents the organizer writing at desk
     o "And I'm writing to the sweet villagers of the Hapil, we'd love to invite your fun ways..."
-    o "A first of hopefully many events !"
-    o "If you can spare one... or two of the Ashenleaf, we can find a way to show their unique skills"
+    o "A first of hopefully many events!"
+    o "If you can spare one... or two of the Ashenleaf, we can find a way to show their unique skills."
     o "It's about time we get to celebrate some Ashenleaf Voices."
     o "The songs of Pumpell Plums always have a place in our hearts, as they've been the ones to start our tradition."
-    o "We hope to hear voices here !"
+    o "We hope to hear voices here!"
     o "I can still remember the first time I heard the voice from those on the path of the Lowtront Glow..."
-    o "When I was a child the first song I heard haunted me for years... in a good way ! Come by !"
+    o "When I was a child the first song I heard haunted me for years... in a good way! Come by!"
 
     # maybe fade agin on the organizer sitting at the desk
     o "Now then, I just need to get these letters out once-"
@@ -128,7 +218,90 @@ label sc1_2_1:
     # need some more information on how we introduce the characters, the ceremony, and the story
 
     # fade to the day of the opening ceremony, leaflings surround the archway
-    "?" "Oh ! Excuse me !"
+    
+    # leafling 1 = Rivil
+    # leafling 2 = Lerea
+
+    l2 "What's it say?"
+
+    l1 "It's an invitation! To visit the ceremony of the Waving Arch!"
+    l1 "..."
+    l1 "It's a really bad drawing... is this supposed to be the ceremony?"
+
+    l2 "Aw, well they didn't shine in creative lessons. But you've been, right? You know how mystical the event is."
+    l1 "Well, no... It's been years since they've been popular, and I just chose my path, I never had a chance before!"
+
+    l2 "Well, you'll go now right? You have to!"
+    l1 "Maybe if the invitation was clearer..."
+    l2 "Well it just is! Let's imagine it!"
+
+    "It's a grand, beautiful time. It makes you feel rooted, makes you hear the songs of our ancestors."
+    "We carry the tradition of our songs to rouse all the myst we have, and through our voices and songss it's gathered at a specific point."
+    
+    l1 "You're telling me that squiggle is an arch?"
+    l2 "Imagine."
+    l2 "The traditional melody is played, and all the Leaflings know the words."
+    l2 "You know how we say we were singing before we could speak? This is the way to go about it."
+
+    l1 "I'm surprised I never saw one, as a kid at the least..."
+    l2 "Well that's the thing! You have to be on a path, because they are not supposed to be seen."
+    l1 "Who's not?"
+    l2 "The Guardian."
+    l1 "Who's the guardian?"
+    l2 "The Guardian of the Arch!"
+    
+    l1 "Oooh."
+    l2 "Yeah."
+
+    # fade to the leaflings traveling through the forest
+
+    l2 "So anyways, the Guardian of the Arch is not meant to be seen, and well, no one really knows why."
+    l2 "To preserve their myst?"
+    l2 "To keep their focus on the arch itself and keep it's myst pristine and safe?"
+    l2 "To hide that they're immensely shy?"
+    l2 "So when the ceremony starts, the guardian does their thing, they sing. It's pretty right?"
+    l2 "And then the choir of leaflings sing begin them. The path that started this were the Pumpell Plums. Those leaflings will and perhaps always will be the most skilled at the ceremony."
+    l2 "It's a classic to hear them."
+    l2 "It took a while, and well, leaflings of the Lowtront Glow path have been allowed to join."
+    l2 "It was very, what's the word, unusual to see the Lowtront Glow leaves after it being solely the ugardian and Pumpell Plums before this."
+    l2 "It was never the same, but it was better."
+
+    # scene change to the arch, without the guaardian.
+    scene archway
+
+    l1 "Wait, they made it better?"
+    l1 "The Leaflings on the Lowtront Glow path? Don't they just stay in their caves all day and stare at their glowy gardens at night?"
+    l2 "Probably."
+    l2 "But I guess the mystical voices of the Pumpell Pluma and Lowtront Glow just... made it better."
+    l1 "Well, I see the colors on this figure that must be the Pumpell here... those light pastels... and the Lowtront are all greend and glowy... what are those other figures?"
+    l2 "Hm? Oh... The red and spiky, and this other colorful one..."
+
+    l2 "Wait..."
+    l1 "It says here..."
+    l2 "Oh no... Don't tell me..."
+    l1 "Those on the path of the Ashenleaf and Hapil Paths are welcolme to join in at this year's revival ceremony."
+    l2 "THis is..."
+    l1 "Wonderful, and incluse?"
+    l2 "Terrible! Another rift ammong Leaaflings!"
+    l1 "Wheren't you just the one saying the better with more Paths?"
+    l2 "Well..."
+    l1 "Oh look! That must be the guardian!"
+    l2 "Oh wow!"
+    l2 "Maybe it's time for the big annoucement!"
+    jump sc1_2_3
+
+label sc1_2_3:
+
+    scene archway
+    show guardian arch
+    g "..."
+
+    "Someone bumps into you"
+    
+    "???" "Oh! I'm so sorry! Are you okay?"
+    "???" "I'm Laverie, I'm a bit rushed today, aha!"
+    la "You must be one of the Leaflings preparing to sing, what was your name?"
+
     call screen characterSelection
 
 # images related to the button, it's ugly for the moment, we need to take time to make correct buttons
@@ -151,7 +324,7 @@ screen characterSelection:
             ypadding 30
             xalign 0.5
             yalign 0.5
-            imagebutton idle "ashenleafButtonIdle" action [SetVariable("y.playerType", 0), Jump("nameAshenleafChoices")]
+            imagebutton idle "ashenleafButtonIdle" action [SetVariable("playerType", 0), SetVariable("playerName", "Ahele"), Jump("nameAshenleafChoices")]
 
         # pumpell plum
         frame:
@@ -159,7 +332,7 @@ screen characterSelection:
             ypadding 30
             xalign 0.5
             yalign 0.5
-            imagebutton idle "PumpellPlumButtonIdle" action [SetVariable("y.playerType", 1), Jump("namePumpellPlumChoices")]
+            imagebutton idle "PumpellPlumButtonIdle" action [SetVariable("playerType", 1), SetVariable("playerName", "Melulu"), Jump("namePumpellPlumChoices")]
 
         # hapil
         frame:
@@ -167,7 +340,7 @@ screen characterSelection:
             ypadding 30
             xalign 0.5
             yalign 0.5
-            imagebutton idle "hapilButtonIdle" action [SetVariable("y.playerType", 2), Jump("nameHapilChoices")]
+            imagebutton idle "hapilButtonIdle" action [SetVariable("playerType", 2), SetVariable("playerName", "Pali"), Jump("nameHapilChoices")]
 
         # lowtront glow
         frame:
@@ -175,80 +348,82 @@ screen characterSelection:
             ypadding 30
             xalign 0.5
             yalign 0.5
-            imagebutton idle "lowtrontGlowButtonIdle" action [SetVariable("y.playerType", 3), Jump("nameLowtrontGlowChoices")]
+            imagebutton idle "lowtrontGlowButtonIdle" action [SetVariable("playerType", 3), SetVariable("playerName", "Wotto"), Jump("nameLowtrontGlowChoices")]
 
 # important to remove and replace !!!!!!!!!!!!
 
 # choices for name
 # for ashenleaf
 menu nameAshenleafChoices:
-    "What's your name ?"
+    "Your name is Ahele and you choose the Ashenleaf Path. Are you sure?"
 
-    "Sahen":
-        $ y.playerName = "Sahen"
-        jump sc1_2_2
-    "Aheleh":
-        $ y.playerName = "Aheleh"
-        jump sc1_2_2
-    "Enel Ehales":
-        $ y.playerName = "Enel"
-        jump sc1_2_2
+    "Yes":
+        jump sc1_2_4
+    "No":
+        call screen characterSelection
 # for Pumpell Plum
 menu namePumpellPlumChoices:
-    "What's your name ?"
+    "Your name is Melulu and you choose the Pumpell Plum Path. Are you sure?"
 
-    "Melulu":
-        $ y.playerName = "Melulu"
-        jump sc1_2_2
-    "Ume":
-        $ y.playerName = "Ume"
-        jump sc1_2_2
-    "Lemu":
-        $ y.playerName = "Lemu"
-        jump sc1_2_2
+    "Yes":
+        jump sc1_2_4
+    "No":
+        call screen characterSelection
 # for Hapil
 menu nameHapilChoices:
-    "What's your name ?"
+    "Your name is Pali and you choose the Hapil Path. Are you sure?"
 
-    "Pilla":
-        $ y.playerName = "Pilla"
-        jump sc1_2_2
-    "Hali":
-        $ y.playerName = "Hali"
-        jump sc1_2_2
-    "Ala":
-        $ y.playerName = "Ala"
-        jump sc1_2_2
+    "Yes":
+        jump sc1_2_4
+    "No":
+        call screen characterSelection
 # for Lowtront Glow
 menu nameLowtrontGlowChoices:
-    "What's your name ?"
+    "Your name is Wotto and you choose the Lowtront Glow Path. Are you sure?"
 
-    "Itlin":
-        $ y.playerName = "Itlin"
-        jump sc1_2_2
-    "Otorn":
-        $ y.playerName = "Otorn"
-        jump sc1_2_2
-    "Wotto":
-        $ y.playerName = "Wotto"
-        jump sc1_2_2
+    "Yes":
+        jump sc1_2_4
+    "No":
+        call screen characterSelection
 
 
-label sc1_2_2:
+label sc1_2_4:
 
-    # I don't know how to do the transition but it's okay
-    y "Hello ? My name is [y.playerName] !"
+    if playerType == 0:
+        a "Woah! You trying to knock me away?"
+    elif playerType == 1:
+        p "My, you're just trying to flow through this crowd, aren't you?"
+    elif playerType == 2:
+        h "Oh no, I'm sorry! Are you okay? I hope you're okay!"
+    elif playerType == 3:
+        l "Ah. It's... okay."
+    
+    la "Oh, [playerName]? I recognize that name. And now I know your face! I'm not the best at remembering some things, but I never forget a face!"
 
-    # I thought it would be fun to make the character react weird if you choose enel ehales
-    if y.playerName == "Enel Ehales":
-        "?" "It will be just [y.playerName]..."
-    else:
-        "?" "Hello [y.playerName] ! I'm ?, it's great to meet you !"
+    l1 "Hey, why isn't the Guardian saying anything?"
+    l1 "Isn't there supposed to be something happening?"
 
-    # I read the script it's hard to understand who is this person, what does he want us 
-    # or even what are all of the dialogues that appears on the script...
+    la "Oh! I'm sorry [playerName], I have to go. Did I mention I'm the Organizer of this event! I have to talk to everyone, please excuse me!"
 
+    # make her wiggle through the crowd and make it jiggle on the stage
+    la "Welcome everyone! Thank you all so much for coming to the first annual ceremony for the Waving Arch!"
+    la "This is the Guardian of the Arch! We thank you for welcoming us here Guardian!"
 
+    la "My name is Laverie, and I'm the organizer of this event as a whole, so don't be afraid to come to me with questions!"
+    la "But, uh, hopefully I'll answer a lot of you questions right now, before you have them. Ahem!"
+
+    la "Though participation in this ceremony is ultimately not a competition, I thoguht it would be fun to add a little layer of sport to the whole thing!"
+    la "So, at the end of it all, when the — if, hopefully, but, when the arch blooms, the best singers will be given a fantastic prize!"
+
+    la "Oh I forgot to — I'll announce it in a second, nevermind. You'll learn four songs, each chosen by those of different paths, symbolizing unity and growth!"
+    la "To that end, there will be song trainers in each village to help you learn the song of their path."
+    la "They've each bee ngiven a red banner, so make sure to look for them!"
+    la "And um— please don't put up a red banner if you're not a trainer"
+    la "I didn't tell anyone not to, so it might confuse the participants if you do."
+
+    la "If you're here, thank you! Thank you so much again for being here!"
+    la "Those who wish to watch, please feel free to stay and enjoy the hospitality of the Hapil!"
+    la "I can't wait to meet you all! Best of luck!"
 
 # ----------------------
 # Scene 2
@@ -279,11 +454,11 @@ label first_battle_Hub_Player:
     jump first_battle
 
 label firstBattleLose:
-    t1 "Maybe next time !!"
+    t1 "Maybe next time!!"
     jump sc4_1
 
 label firstBattleWin:
-    t1 "Good job !!!"
+    t1 "Good job!!"
     jump sc4_1
 
 
@@ -297,50 +472,64 @@ label sc4_1:
     t1 "Oh I think the organizer is calling a meeting, let's see what does he want..."
     # fade to the meeting room
 
-    o "So everyone, you will be paired with someone !"
+    la "So everyone, you will be paired with someone!"
     scene black
 
     # fade to hapil village
+    if playerType == 0:
+        a "(Argh, of course I got paired with a hapil...)"
+        a "(She seems like way, wayyyyy too much of a morning person.)"
+        a "(But there could be worse people to pair up with.)"
+        h "Hello !!"
+        a "...Sup."
+
+    if playerType == 2:
+        h "(Oh boy, he looks... angry)"
+        h "(Are we sure this is right leaf to pair me with...?)"
+        h "(Well. Well ! Nothing to do about it but make a good first impression!)"
+        h "Hello !!"
+        a "...Sup."
 
     # ashenleaf and hapil
-    if y.playerType == 0 or y.playerType == 2: 
+    if playerType == 0 or playerType == 2: 
         # we need to show both characters here I think
 
-        h "So we're partners, I guess !!"
+        h "So we're partners, I guess!!"
 
         # need information on his name + the daredevil thing
-        h "Good to meet you ! My name's ____ and I like something daredevil and bracelet-making and singing, and I'm super excited to join chorus"
-        a "Yeah, I heard-, wait, you like the daredevil thing ?!"
+        h "Good to meet you ! My name's Pali and I like something daredevil and bracelet-making and singing, and I'm super excited to join chorus!"
+        a "Yeah, I heard-, wait, you like the branch diving?!"
 
-        # still need some informations on how to setup
-        # I imagine that we skip the part where the ashenleaf is talking about, and we just show them vibing
-
-        a "But- OH wait right we have to go learn whatever song they want us to learn."
-        h "Okay ! Cool !"
-        a "If you ask me, it's stupid, not cool. They invited us, they should let us do our own thing !!"
+        h "For sure!!"
+        a "Have you been to (Location)? They haave, like, the most extreme dives, it's my favorite place to go."
+        h "Ooh, not yet. All the places I travel to are local."
+        a "You gotta go out there. I did a half-branchslide down a chip into a ghost flip -- impossible to do without the speed you get from the locale."
+        h "A... What flip now?"
+        a "Y'know, a-- OH wait right we have to go learn whatever song they want us to learn. I'm Ahele, also."
+        h "Okay! Cool!!"
+        a "If you ask me, it's stupid, not cool. They invited us, they should let us do our own thing!!"
         a "But hey fine, whatever, we gotta do the doo-doo-doo song."
-        a "Aw but it's a lovely doo doo doo. C'mon !"
+        a "Aw but it's a lovely doo doo doo. C'mon!"
         jump second_battle_trainer
 
     # pumpell plum and lowtront glow
-    elif y.playerType == 1 or y.playerType == 3:
+    elif playerType == 1 or playerType == 3:
 
         p "Come on now, we will be partners."
-        l "Oh, but I didn't... okay ?"
-
-        # still need the name
-        p "Your name ____, right ?"
+        l "Oh, but I didn't... okay?"
+        p "Your name Wotto, right?"
         l "Yes that's me."
-        p "Perfect. I've heard through the grapevine you have a beautiful voice, which is a blessing blessing for us traditional singers."
-        p "Once they hear us hitting the notes ever-so flawlessly, they'll be enraptured by our grace...!"
-        l "O-oh ! Um, thank you ! But, maybe we should... learn how to sing, first..."
-        p "Exactly"
+        p "Perfect. My name is Melulu. I've heard through the grapevine you have a beautiful voice, which is a blessing blessing for us traditional singers."
+        p "Once they hear us hitting the notes ever-so flawlessly, they'll be be so impressed by our radiance they'll just give up on the spot!"
+        l "O-oh! Um, thank you! But, maybe we should... learn how to sing, first..."
+        p "Absolutely right. Though, I'm sure it won't be much of a feat. To the trainer, then."
         jump second_battle_trainer
 
 # for this part I will need way more informations on how to setup it
 label second_battle_trainer:
     # all related to the trainer battle
     ht "Goooooooood morning everyone !!"
+    ht "It's the first battle "
 
 label third_battle:
     # all related to the first big battle
@@ -349,31 +538,31 @@ label third_battle:
 label sc4_3_Win:
     ht "Wonderful, wonderful job !!"
 
-    if y.playerType == 1 or y.playerType == 3:
-        h "Yyyes ! That was so fun !!"
+    if playerType == 0 or playerType == 2:
+        h "Yyyes! That was so fun!!"
         # ?????? dont understand leafling stand in for cake
-        a "YEAH !! See, what'd I tell ya ! Piece of (leaflinf stand-in for cake ??)"
-        h "So, where to next ? Lead the way, partner."
-        a "To the (organizer) ! If we finished first, we can totally brag about it."
+        a "YEAH!! See, what'd I tell ya ! Piece of (leaflinf stand-in for cake ??)"
+        h "So, where to next? Lead the way, partner."
+        a "Laverie! If we finished first, we can totally brag about it."
         jump sc4_4
     
-    if y.playerType == 0 or y.playerType == 2:
-        p "There ! Nothing less than perfection. Just like I knew it would be."
+    if playerType == 1 or playerType == 3:
+        p "There! Nothing less than perfection. Just like I knew it would be."
 
         # lowtront blushing
         l "Yeah... yeah."
-        p "Let's go then. Onto learning the next song !!"
+        p "Let's go then. Onto learning the next song!!"
         jump sc4_4
 
 label sc4_3_Lose:
-    if y.playerType == 1 or y.playerType == 3:
-        h "Whoa ! Haha, that went well!"
-        a "Aaagh, no it didn't ! What did I tell you ? This whole thing is stupid"
-        h "Aw, I guess it didn't. Could we try again ?"
+    if playerType == 0 or playerType == 2:
+        h "Whoa! Haha, that went well!"
+        a "Aaagh, no it didn't! What did I tell you? This whole thing is stupid."
+        h "Aw, I guess it didn't. Could we try again?"
         a "No way. Let's keep this one to ourselves."
         jump sc4_4
     
-    if y.playerType == 0 or y.playerType == 2:
+    if playerType == 1 or playerType == 3:
         p "Oh, dear. That needs some... work."
         l "Mmm..."
         jump sc4_4
@@ -382,7 +571,7 @@ label sc4_4:
 
     # we fade to the pumpell village, with the organizer that sends here
 
-    show black
+    scene black
     centered "End day 1"
     jump sc5_1
 
@@ -393,10 +582,21 @@ label sc4_4:
 # ----------------------
 label sc5_1: 
 
+    scene black
     centered "Day 2"
     
     # fade to pumpell plum village
-    pt "You're late ! Come here, come here, stand in your spots. Quickly ! Thank you, dears."
+    pt "You're late! Come here, come here, stand in your spots. Quickly! Thank you, dears."
+
+    if playerType == 0 or playerType == 2:
+        a "They're not messing around."
+        h "Then we won't either! C'mon! Let's sing!!"
+        jump pumpell_trainer
+    
+    if playerType == 1 or playerType == 3:
+        p "A flower after my own heart. Let us not diisappoint her!"
+        l "I'll... try not to!"
+        jump pumpell_trainer
 
 
 # ----------------------
@@ -666,6 +866,7 @@ screen attack:
         # set variable of input by appending to it out inputList
         Function(variables.changeText, returnTextByList(inputList)), 
         Function(printList, inputList),
+        Play("sound", "Music/Battle themes/Modern/Ashenleaf/Notes seq/Ashenleaf voice - note 1.ogg"),
         # refresh
         renpy.restart_interaction
     ]
@@ -677,6 +878,7 @@ screen attack:
         # set variable of input by appending to it out inputList
         Function(variables.changeText, returnTextByList(inputList)), 
         Function(printList, inputList),
+        Play("sound", "Music/Battle themes/Modern/Ashenleaf/Notes seq/Ashenleaf voice - note 2.ogg"),
         # refresh
         renpy.restart_interaction
     ]
@@ -688,6 +890,7 @@ screen attack:
         # set variable of input by appending to it out inputList
         Function(variables.changeText, returnTextByList(inputList)), 
         Function(printList, inputList),
+        Play("sound", "Music/Battle themes/Modern/Ashenleaf/Notes seq/Ashenleaf voice - note 3.ogg"),
         # refresh
         renpy.restart_interaction
     ]
@@ -699,6 +902,7 @@ screen attack:
         # set variable of input by appending to it out inputList
         Function(variables.changeText, returnTextByList(inputList)), 
         Function(printList, inputList),
+        Play("sound", "Music/Battle themes/Modern/Ashenleaf/Notes seq/Ashenleaf voice - note 4.ogg"),
         # refresh
         renpy.restart_interaction
     ]
