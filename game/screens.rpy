@@ -294,7 +294,7 @@ screen navigation():
         if main_menu:
 
             textbutton _("Start"):
-                activate_sound "audio/UI/DolaVonde_UI_Confirm.ogg"
+                activate_sound "audio/UI/DolaVonde_UI_Confirm_2.ogg"
                 action Start()
 
         else:

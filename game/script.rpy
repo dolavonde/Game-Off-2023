@@ -88,7 +88,7 @@ init python:
 # characters
 
 # i define it but really not sure if we are going to use it
-define o = Character("Organizer")
+define o = Character("Organizer",callback=lowtront_bleep)
 define n = Character("Narrator")
 define g = Character("Guardian")
 define e = Character("Elder")
@@ -99,13 +99,13 @@ define h = Character("Hapil", callback=hapil_bleep)
 define l = Character("Lowtront glow", callback=lowtront_bleep)
 
 define character.t1 = Character("Trainer 1")
-define ht = Character("Hapil Trainer")
+define ht = Character("Hapil Trainer", callback=hapil_bleep)
 define pt = Character("Pumpell Plum Trainer")
 
-define l1 = Character("Rivil")
-define l2 = Character("Lerea")
+define l1 = Character("Rivil", callback=pumpell_bleep)
+define l2 = Character("Lerea", callback=pumpell_bleep)
 
-define la = Character("Laverie")
+define la = Character("Laverie", callback=lowtront_bleep)
 
 
 # transform for the characters
@@ -116,8 +116,8 @@ transform bouncein:
         linear .3           xpos 10 ypos 0
 
 transform breath:
-    linear 1 xpos 10 
-    linear 1 xpos 0   
+    linear 1 xalign 0.4 
+    linear 1 xalign 0.6
     repeat 
 
 transform breath2:
@@ -174,6 +174,7 @@ label start:
 label intro:
     scene black
     centered "Introduction..."
+    play music "audio/Music/Main theme/Leaflings theme.ogg" loop
 
     o "Hmm..."
     o "This won't do"
@@ -222,6 +223,17 @@ label sc1_2_1:
     # leafling 1 = Rivil
     # leafling 2 = Lerea
 
+    # scene change to the arch, without the guaardian.
+    scene archway
+    play music "audio/Music/Main theme/Leaflings theme.ogg" loop volume 0.1
+
+    show npc_3:
+        xalign 0.3
+        yalign 1.0
+    show npc_4:
+        yalign 1.0
+        xalign 0.7
+
     l2 "What's it say?"
 
     l1 "It's an invitation! To visit the ceremony of the Waving Arch!"
@@ -235,9 +247,20 @@ label sc1_2_1:
     l1 "Maybe if the invitation was clearer..."
     l2 "Well it just is! Let's imagine it!"
 
+    scene black 
+
     "It's a grand, beautiful time. It makes you feel rooted, makes you hear the songs of our ancestors."
-    "We carry the tradition of our songs to rouse all the myst we have, and through our voices and songss it's gathered at a specific point."
+    "We carry the tradition of our songs to rouse all the myst we have, and through our voices and songs it's gathered at a specific point."
     
+    scene archway
+
+    show npc_3:
+        xalign 0.3
+        yalign 1.0
+    show npc_4:
+        yalign 1.0
+        xalign 0.7
+
     l1 "You're telling me that squiggle is an arch?"
     l2 "Imagine."
     l2 "The traditional melody is played, and all the Leaflings know the words."
@@ -266,9 +289,6 @@ label sc1_2_1:
     l2 "It was very, what's the word, unusual to see the Lowtront Glow leaves after it being solely the ugardian and Pumpell Plums before this."
     l2 "It was never the same, but it was better."
 
-    # scene change to the arch, without the guaardian.
-    scene archway
-
     l1 "Wait, they made it better?"
     l1 "The Leaflings on the Lowtront Glow path? Don't they just stay in their caves all day and stare at their glowy gardens at night?"
     l2 "Probably."
@@ -293,14 +313,20 @@ label sc1_2_1:
 label sc1_2_3:
 
     scene archway
-    show guardian arch
+    show guardian arch at center
     g "..."
 
     "Someone bumps into you"
     
-    "???" "Oh! I'm so sorry! Are you okay?"
-    "???" "I'm Laverie, I'm a bit rushed today, aha!"
+    show laverie woah at center
+
+    la "Oh! I'm so sorry! Are you okay?"
+
+    show laverie smile at breath
+    la "I'm Laverie, I'm a bit rushed today, aha!"
     la "You must be one of the Leaflings preparing to sing, what was your name?"
+
+    show laverie hmm at center
 
     call screen characterSelection
 
@@ -389,21 +415,63 @@ menu nameLowtrontGlowChoices:
 
 label sc1_2_4:
 
+    show laverie hmm:
+        xalign 0.7
+        yalign 1.0
+
     if playerType == 0:
+        show pc3 grr: 
+            xalign 0.3 
+            yalign 1.0
         a "Woah! You trying to knock me away?"
     elif playerType == 1:
+        show pc4 grr: 
+            xalign 0.3 
+            yalign 1.0
         p "My, you're just trying to flow through this crowd, aren't you?"
     elif playerType == 2:
+        show pc1 aw: 
+            xalign 0.3 
+            yalign 1.0
         h "Oh no, I'm sorry! Are you okay? I hope you're okay!"
     elif playerType == 3:
+        show pc2 gr: 
+            xalign 0.3 
+            yalign 1.0
         l "Ah. It's... okay."
-    
+
     la "Oh, [playerName]? I recognize that name. And now I know your face! I'm not the best at remembering some things, but I never forget a face!"
+
+    show npc_3:
+        xalign 0.1
+        yalign 1.0
+    show npc_4:
+        yalign 1.0
+        xalign 0.2
 
     l1 "Hey, why isn't the Guardian saying anything?"
     l1 "Isn't there supposed to be something happening?"
 
-    la "Oh! I'm sorry [playerName], I have to go. Did I mention I'm the Organizer of this event! I have to talk to everyone, please excuse me!"
+    hide npc_3
+    hide npc_4
+
+    la "Oh! I'm sorry [playerName], I have to go. Did I mention I'm the Organizer of this event? I have to talk to everyone, please excuse me!"
+
+    if playerType == 0:
+        hide pc3
+    elif playerType == 1:
+        hide pc4
+    elif playerType == 2:
+        hide pc1
+    elif playerType == 3:
+        hide pc2
+
+    show laverie woo:
+        xalign 0.3
+        yalign 1.0
+    show guardian center:
+        yalign 1.0
+        xalign 0.7
 
     # make her wiggle through the crowd and make it jiggle on the stage
     la "Welcome everyone! Thank you all so much for coming to the first annual ceremony for the Waving Arch!"
@@ -411,6 +479,55 @@ label sc1_2_4:
 
     la "My name is Laverie, and I'm the organizer of this event as a whole, so don't be afraid to come to me with questions!"
     la "But, uh, hopefully I'll answer a lot of you questions right now, before you have them. Ahem!"
+
+    la "Thank you all for being here!"
+    la "I love seeing all your little leafy and petal-y faces, I'm excited for what we have planned."
+    la "Me and the Guardian of the Arch are very excited."
+
+    show guardian close:
+        yalign 1.0
+        xalign 0.7
+    g "..."
+
+    la "That was a nod!"
+    la "Now!\n\nI do wonder who's been to a ceremony like this before?"
+    la "Our newest Guardian here as been working hard to maintain this arch and it's pearls."
+
+    show guardian left
+    g "..."
+
+    la "With all their hard work, we as a community need to come back together to aid our Guardian!"
+    la "This ceremony we will hold will be for the pearls of..."
+    la "Um, the pearls of... \n\nWe want to..."
+
+    show guardian right
+
+    la "I'm sorry Guardian, what were these pearls holding?"
+
+    show guardian center
+    la "..."
+    la "Violet seeds..."
+
+    la "Oh yes! Right!"
+    la "Help us hold and revive the violet seeds!"
+
+    show guardian close
+    la "A rather mysterious pearl we've come across holding the violet seeds, we know so little about them, and we need your help to make them bloom."
+    la  "But yes, whose ready to help these bloom!"
+
+    l1 "Wait, how do we help them bloom?"
+    l2 "Yeah I don't really know how it works, do you?"
+    l1 "Nope."
+    l1 "Honestly, it looks like no one else around us does either!"
+
+    la "Er, well..."
+    la "That was were you all were supposed to cheer and sing a little bit..."
+    la "But that's okay! \n\nI guess I should have explained things a bit..."
+
+    la "Our voices are what will be the mystical force that will be collected into this pearl."
+    la "Our guardian will place it in the arch, way up high in one of those spots up here."
+    la "Collectively, our voices, with the songs, that for centuries, has given arches like these all around the mystical power make seeds like this, bloom to us leaflings!"
+    la "It will grow and diversify our forest, and make us all the happier!"
 
     la "Though participation in this ceremony is ultimately not a competition, I thoguht it would be fun to add a little layer of sport to the whole thing!"
     la "So, at the end of it all, when the — if, hopefully, but, when the arch blooms, the best singers will be given a fantastic prize!"
@@ -425,6 +542,8 @@ label sc1_2_4:
     la "Those who wish to watch, please feel free to stay and enjoy the hospitality of the Hapil!"
     la "I can't wait to meet you all! Best of luck!"
 
+    jump sc4_1
+
 # ----------------------
 # Scene 2
 # ----------------------
@@ -438,6 +557,7 @@ label sc1_2_4:
 # ----------------------
 label sc3_1:
     scene black
+    centered "End of the intro"
     centered "Day 1"
 
     # will change just for debug purpose
@@ -469,55 +589,92 @@ label firstBattleWin:
 # first real battle
 # ----------------------
 label sc4_1:
-    t1 "Oh I think the organizer is calling a meeting, let's see what does he want..."
+    scene black
+    centered "End of the intro"
+    centered "Day 1"
+
+    scene hapil village2
+
     # fade to the meeting room
 
+    show laverie hmm at center
+    la "Oh, OH, I forgot!!"
+    show laverie close at center
     la "So everyone, you will be paired with someone!"
-    scene black
+    show laverie woah at center
+    "Everyone" "WHAT?!"
+    hide laverie
 
     # fade to hapil village
     if playerType == 0:
+        show pc1 smile:
+            xalign 0.7
+            yalign 1.0
+        show pc3 grr:
+            yalign 1.0
+            xalign 0.3
         a "(Argh, of course I got paired with a hapil...)"
         a "(She seems like way, wayyyyy too much of a morning person.)"
         a "(But there could be worse people to pair up with.)"
         h "Hello !!"
         a "...Sup."
 
-    if playerType == 2:
+    if playerType == 2:        
+        
+        show pc1 aw:
+            xalign 0.3
+            yalign 1.0
+        show pc3 grr:
+            yalign 1.0
+            xalign 0.7
         h "(Oh boy, he looks... angry)"
         h "(Are we sure this is right leaf to pair me with...?)"
         h "(Well. Well ! Nothing to do about it but make a good first impression!)"
+        show pc1 smile
         h "Hello !!"
         a "...Sup."
 
     # ashenleaf and hapil
     if playerType == 0 or playerType == 2: 
         # we need to show both characters here I think
-
         h "So we're partners, I guess!!"
 
         # need information on his name + the daredevil thing
-        h "Good to meet you ! My name's Pali and I like something daredevil and bracelet-making and singing, and I'm super excited to join chorus!"
+        h "Good to meet you ! My name's Pali and I like branch diving and bracelet-making and singing, and I'm super excited to join chorus!"
+        show pc3 uh
         a "Yeah, I heard-, wait, you like the branch diving?!"
-
+        show pc1 hehe
         h "For sure!!"
-        a "Have you been to (Location)? They haave, like, the most extreme dives, it's my favorite place to go."
+        show pc3 yeah
+        a "Have you been to the red leaf sea? They have, like, the most extreme dives, it's my favorite place to go."
         h "Ooh, not yet. All the places I travel to are local."
         a "You gotta go out there. I did a half-branchslide down a chip into a ghost flip -- impossible to do without the speed you get from the locale."
+        show pc1 oh
         h "A... What flip now?"
         a "Y'know, a-- OH wait right we have to go learn whatever song they want us to learn. I'm Ahele, also."
         h "Okay! Cool!!"
+        show pc3 what
         a "If you ask me, it's stupid, not cool. They invited us, they should let us do our own thing!!"
+        show pc3 yeah
         a "But hey fine, whatever, we gotta do the doo-doo-doo song."
+        show pc1 smile
         a "Aw but it's a lovely doo doo doo. C'mon!"
         jump second_battle_trainer
 
     # pumpell plum and lowtront glow
     elif playerType == 1 or playerType == 3:
 
+        show pc2 gr:
+            xalign 0.3
+            yalign 1.0
+        show pc4 smile:
+            yalign 1.0
+            xalign 0.7
+
         p "Come on now, we will be partners."
         l "Oh, but I didn't... okay?"
         p "Your name Wotto, right?"
+        show pc2 heh
         l "Yes that's me."
         p "Perfect. My name is Melulu. I've heard through the grapevine you have a beautiful voice, which is a blessing blessing for us traditional singers."
         p "Once they hear us hitting the notes ever-so flawlessly, they'll be be so impressed by our radiance they'll just give up on the spot!"
@@ -528,42 +685,127 @@ label sc4_1:
 # for this part I will need way more informations on how to setup it
 label second_battle_trainer:
     # all related to the trainer battle
-    ht "Goooooooood morning everyone !!"
-    ht "It's the first battle "
+    if playerType == 0 or playerType == 2:
+        show pc1 smile:
+            xalign 0.1
+            yalign 1.0
+        show pc3 yeah:
+            yalign 1.0
+            xalign 0.3
+
+    if playerType == 1 or playerType == 3:
+        show pc2 gr:
+            xalign 0.1
+            yalign 1.0
+        show pc4 smile:
+            yalign 1.0
+            xalign 0.3
+
+    show hapiltrain close:
+        yalign 1.0
+        xalign 0.8
+
+    ht "Goooooooood morning everyone!!"
+    ht "It's the first battle and I know that working with someone that is not necessary in your path can be complicated."
+    ht "And I will try my best to teach you everything so that you can perform the best in front of the organizer."
+    ht "Let's start right now !"
+
+    "You will start the tutorial, the four inputs of the game are the keys : Q, W, E, and R."
+    "When you will attack for the first time, try to do the sequence QWER"
+
+    $ battleState = 2
+    play music "audio/Music/Battle themes/Modern/Hapil/Modern - Hapil battle.ogg" loop
+    jump battles_hub
+
+label after_trainer:
+    play music "audio/Music/Main theme/Leaflings theme.ogg" loop
+    ht "Good job both! I think you're ready."
+    
+    if playerType == 0 or playerType == 2:
+        ht "Your first opponent will be a duo of Pumpell Plum and Lowtront Glow."
+        ht "Good luck!"
+        jump third_battle
+    else:
+        ht "Your first opponent will be a duo of Ashenleaf and Hapil."
+        ht "Good luck!"
+        jump third_battle
 
 label third_battle:
     # all related to the first big battle
+    hide hapiltrain
 
+    if playerType == 0 or playerType == 2:
+        show pc2 gr:
+            xalign 0.7
+            yalign 1.0
+        show pc4 smile:
+            yalign 1.0
+            xalign 0.9
+
+
+    if playerType == 1 or playerType == 3:
+        show pc1 smile:
+            xalign 0.7
+            yalign 1.0
+        show pc3 yeah:
+            yalign 1.0
+            xalign 0.9
+
+    $ battleState = 3
+    $ attention_ennemy = 100
+    $ attention_player = 100
+    $ begin = True
+    play music "audio/Music/Battle themes/Modern/Hapil/Modern - Hapil battle.ogg" loop
+    jump battles_hub
 
 label sc4_3_Win:
     ht "Wonderful, wonderful job !!"
 
     if playerType == 0 or playerType == 2:
+        show pc1 boo
         h "Yyyes! That was so fun!!"
         # ?????? dont understand leafling stand in for cake
-        a "YEAH!! See, what'd I tell ya ! Piece of (leaflinf stand-in for cake ??)"
+        a "YEAH!! See, what'd I tell ya ! Piece of hapil! I mearn... uh."
+        show pc3 uh
+        show pc1 smile
+        h "Ah, don't worry about it. I hear that all the time."
+
+        show pc3 yeah
+        a "Aright. Cool"
+        show pc1 hehe
         h "So, where to next? Lead the way, partner."
         a "Laverie! If we finished first, we can totally brag about it."
         jump sc4_4
     
     if playerType == 1 or playerType == 3:
+
+        show pc4 heh
         p "There! Nothing less than perfection. Just like I knew it would be."
 
         # lowtront blushing
+        show pc2 ha
         l "Yeah... yeah."
+        show pc2 heh
+        show pc4 smile
         p "Let's go then. Onto learning the next song!!"
         jump sc4_4
 
 label sc4_3_Lose:
     if playerType == 0 or playerType == 2:
+        show pc1 boo
         h "Whoa! Haha, that went well!"
+        show pc3 no
         a "Aaagh, no it didn't! What did I tell you? This whole thing is stupid."
+        show pc1 uh
         h "Aw, I guess it didn't. Could we try again?"
+        show pc3 grr
         a "No way. Let's keep this one to ourselves."
         jump sc4_4
     
     if playerType == 1 or playerType == 3:
+        show pc4 no
         p "Oh, dear. That needs some... work."
+        show pc2 umm
         l "Mmm..."
         jump sc4_4
     
@@ -572,32 +814,8 @@ label sc4_4:
     # we fade to the pumpell village, with the organizer that sends here
 
     scene black
-    centered "End day 1"
-    jump sc5_1
-
-
-
-# ----------------------
-# Scene 5
-# ----------------------
-label sc5_1: 
-
-    scene black
-    centered "Day 2"
-    
-    # fade to pumpell plum village
-    pt "You're late! Come here, come here, stand in your spots. Quickly! Thank you, dears."
-
-    if playerType == 0 or playerType == 2:
-        a "They're not messing around."
-        h "Then we won't either! C'mon! Let's sing!!"
-        jump pumpell_trainer
-    
-    if playerType == 1 or playerType == 3:
-        p "A flower after my own heart. Let us not diisappoint her!"
-        l "I'll... try not to!"
-        jump pumpell_trainer
-
+    centered "End day 1 (and demo !)"
+    jump endGame
 
 # ----------------------
 # All related to the battles
@@ -701,6 +919,257 @@ label battles_hub:
                 hide screen attentionBars
                 jump firstBattleLose
 
+    if battleState == 2:
+
+        if begin == True :
+
+            # screen that show the attention bars on right and left
+            show screen attentionBars
+
+            if d3 == 1:
+                $ urTurn = False
+                $ begin = False
+            else:
+                $ urTurn = True
+                $ begin = False
+
+        # all related to our turn !
+        if urTurn == True:
+            centered "Our turn !"
+
+            if attention_ennemy <= 0:
+                hide screen attentionBars
+                jump after_trainer
+            else:
+                call screen battleMenu
+        else: 
+            # all related to the opponent turn !
+            centered "Trainer turn !"
+
+            if attention_player >= 66:
+
+                if d3 == 1:
+                    $ attention_player -= 15
+                    ht "This song is very special, try the sequence QWER."
+                    $ urTurn = True
+                    jump battles_hub
+
+                elif d3 == 2:
+                    $ attention_player -= 23
+                    if playerType == 0 or playerType == 2:
+                        show pc3 grr
+                        a "Urgh, where'd this song come from, the ancients?"
+                        show hapiltrain open
+                        ht "Yes them!"
+                        show hapiltrain close
+                    if playerType == 1 or playerType == 3:
+                        show pc4 heh
+                        l "Mmm... I've heard this song before, but never this in two parts..."
+                        show hapiltrain close
+                    $ urTurn = True
+                    jump battles_hub
+
+                elif d3 == 3:
+                    $ attention_player -= 15
+                    ht "A little bit more!!"
+                    $ urTurn = True
+                    jump battles_hub
+
+            elif 33 <= attention_player < 66:
+
+                if d3 == 1:
+                    $ attention_player -= 12
+                    ht "You're making some progress!! Maybe try the sequence RQQREE"
+                    $ urTurn = True
+                    jump battles_hub
+
+                elif d3 == 2:
+                    $ attention_player -= 23
+                    if playerType == 0 or playerType == 2:
+                        show pc3 grr
+                        a "We could make it better by doing... Literally anything else."
+                    if playerType == 1 or playerType == 3:
+                        show pc2 gr
+                        p "It doesn't sound too difficult, just remember that you must breathe in between the low C and high A."
+                        p "Or your voice may slide, and minor difference as it is, that's not how it's supposed to sound."
+                    $ urTurn = True
+                    jump battles_hub
+
+                elif d3 == 3:
+                    $ attention_player -= 17
+                    ht "You need to reajust, that's not quite it!"
+                    $ urTurn = True
+                    jump battles_hub
+
+            elif 0 < attention_player < 33:
+
+                if d3 == 1:
+                    $ attention_player -= 9
+                    ht "Almost there!!"
+                    $ urTurn = True
+                    jump battles_hub
+                
+                elif d3 == 2:
+                    $ attention_player -= 14
+                    if playerType == 0 or playerType == 2:
+                        show pc1 uh
+                        h "It seems important to them..."
+                        show pc3 yeah
+                        a "Whatever. I'm gonna freestyle it."
+                        show pc1 smile
+                        h "O-okay. I'll try to hhelp, but we have to stay on the melody"
+                    if playerType == 1 or playerType == 3:
+                        show pc4 grr
+                        p "And remember this note here is a G flat, not an F sharp. And this measure has two rests, unlike the typical one."
+                        p "Have tou gotten all that?"                        
+                        show pc2 umm
+                        l "...Uh. I dont know if I can..."
+                        p "Good! Let us perform!"
+                    $ urTurn = True
+                    jump battles_hub
+                
+                elif d3 == 3:
+                    $ attention_player -= 16
+                    ht "You can try the last sequence EWQWE!"
+                    $ urTurn = True
+                    jump battles_hub
+
+            elif attention_player <= 0:
+                hide screen attentionBars
+                jump after_trainer
+
+    if battleState == 3:
+
+        if begin == True :
+
+            # screen that show the attention bars on right and left
+            show screen attentionBars
+
+            if d3 == 1:
+                $ urTurn = False
+                $ begin = False
+            else:
+                $ urTurn = True
+                $ begin = False
+
+        # all related to our turn !
+        if urTurn == True:
+            centered "Our turn !"
+
+            if attention_ennemy <= 0:
+                hide screen attentionBars
+                jump sc4_3_Win
+            else:
+                call screen battleMenu
+        else: 
+            # all related to the opponent turn !
+            centered "Opponent turn !"
+
+            if attention_player >= 66:
+
+                if d3 == 1:
+                    $ attention_player -= 15                    
+                    if playerType == 0 or playerType == 2:
+                        show pc3 grr
+                        a "Let's continue!!"
+                    if playerType == 1 or playerType == 3:
+                        show pc4 heh
+                        l "Like this!"
+                    $ urTurn = True
+                    jump battles_hub
+
+                elif d3 == 2:
+                    $ attention_player -= 23
+                    if playerType == 0 or playerType == 2:
+                        show pc1 hehe
+                        h "We're doing right!!"
+                    if playerType == 1 or playerType == 3:
+                        show pc4 heh
+                        p "Not like this..."
+                    $ urTurn = True
+                    jump battles_hub
+
+                elif d3 == 3:
+                    $ attention_player -= 15                    
+                    if playerType == 0 or playerType == 2:
+                        show pc1 hehe
+                        h "It's just the beginning"
+                    if playerType == 1 or playerType == 3:
+                        show pc4 heh
+                        p "They're not serious at all..."
+                    $ urTurn = True
+                    jump battles_hub
+
+            elif 33 <= attention_player < 66:
+
+                if d3 == 1:
+                    $ attention_player -= 12                    
+                    if playerType == 0 or playerType == 2:
+                        show pc1 aw
+                        h "We're doing good!"
+                    if playerType == 1 or playerType == 3:
+                        show pc4 heh
+                        l "Like in the training!"
+                    $ urTurn = True
+                    jump battles_hub
+
+                elif d3 == 2:
+                    $ attention_player -= 23
+                    if playerType == 0 or playerType == 2:
+                        a "Even if this is stupid, let's do everything them!"
+                    if playerType == 1 or playerType == 3:
+                        p "Don't forget breathe between the low C and the high A."
+                    $ urTurn = True
+                    jump battles_hub
+
+                elif d3 == 3:
+                    $ attention_player -= 17
+                    if playerType == 0 or playerType == 2:
+                        show pc3 grr
+                        h "Don't forget the sequence EQQERR"
+                    if playerType == 1 or playerType == 3:
+                        show pc2 gr
+                        p "Don't forget the sequence EQQERR."
+                    $ urTurn = True
+                    jump battles_hub
+
+            elif 0 < attention_player < 33:
+
+                if d3 == 1:
+                    $ attention_player -= 9
+                    if playerType == 0 or playerType == 2:
+                        h "It's the complicated part, but we have to stay in the melody!"
+                    if playerType == 1 or playerType == 3:
+                        l "I don't know if-"
+                        p "It's not the moment!"
+                    $ urTurn = True
+                    jump battles_hub
+                
+                elif d3 == 2:
+                    $ attention_player -= 14
+                    if playerType == 0 or playerType == 2:
+                        h "You're in a complete freestyle!"
+                        a "Yeah I know, but we will destroy them."
+                    if playerType == 1 or playerType == 3:
+                        p "We're almost finished!"
+                    $ urTurn = True
+                    jump battles_hub
+                
+                elif d3 == 3:
+                    $ attention_player -= 16
+                    if playerType == 0 or playerType == 2:
+                        show pc3 grr
+                        h "Don't forget the sequence EWQWE"
+                    if playerType == 1 or playerType == 3:
+                        show pc2 gr
+                        p "Don't forget the sequence EWQWE."
+                    $ urTurn = True
+                    jump battles_hub
+
+            elif attention_player <= 0:
+                hide screen attentionBars
+                jump sc4_3_Lose
+
 label player_hub:
     $ urTurn = False
     jump battles_hub
@@ -734,8 +1203,6 @@ menu battlePrototype:
         show screen attentionBars
         call screen battleMenu
         
-
-
 # main battle screen
 screen battleMenu:
 
@@ -866,7 +1333,7 @@ screen attack:
         # set variable of input by appending to it out inputList
         Function(variables.changeText, returnTextByList(inputList)), 
         Function(printList, inputList),
-        Play("sound", "Music/Battle themes/Modern/Ashenleaf/Notes seq/Ashenleaf voice - note 1.ogg"),
+        Play("sound", "Music/Battle themes/Modern/Hapil/5 notes seq/Hapil voice - note 1.ogg"),
         # refresh
         renpy.restart_interaction
     ]
@@ -878,7 +1345,7 @@ screen attack:
         # set variable of input by appending to it out inputList
         Function(variables.changeText, returnTextByList(inputList)), 
         Function(printList, inputList),
-        Play("sound", "Music/Battle themes/Modern/Ashenleaf/Notes seq/Ashenleaf voice - note 2.ogg"),
+        Play("sound", "Music/Battle themes/Modern/Hapil/5 notes seq/Hapil voice - note 2.ogg"),
         # refresh
         renpy.restart_interaction
     ]
@@ -890,7 +1357,7 @@ screen attack:
         # set variable of input by appending to it out inputList
         Function(variables.changeText, returnTextByList(inputList)), 
         Function(printList, inputList),
-        Play("sound", "Music/Battle themes/Modern/Ashenleaf/Notes seq/Ashenleaf voice - note 3.ogg"),
+        Play("sound", "Music/Battle themes/Modern/Hapil/5 notes seq/Hapil voice - note 3.ogg"),
         # refresh
         renpy.restart_interaction
     ]
@@ -902,7 +1369,7 @@ screen attack:
         # set variable of input by appending to it out inputList
         Function(variables.changeText, returnTextByList(inputList)), 
         Function(printList, inputList),
-        Play("sound", "Music/Battle themes/Modern/Ashenleaf/Notes seq/Ashenleaf voice - note 4.ogg"),
+        Play("sound", "Music/Battle themes/Modern/Hapil/5 notes seq/Hapil voice - note 4.ogg"),
         # refresh
         renpy.restart_interaction
     ]
@@ -944,3 +1411,6 @@ screen attack:
 
     if len(inputList) > 5:
         $ inputList = []
+
+label endGame:
+    return
